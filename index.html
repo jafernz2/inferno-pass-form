@@ -7,7 +7,6 @@
   <script src="https://apis.google.com/js/api.js"></script>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    #form-container { display: none; margin-top: 20px; }
     .form-section { margin-bottom: 15px; }
     table, th, td { border: 1px solid black; border-collapse: collapse; }
     th, td { padding: 5px; }
@@ -15,12 +14,6 @@
 </head>
 <body>
   <h1>Inferno Schools Classroom and Hall System</h1>
-
-  <div class="form-section">
-    <label for="access-code">Enter 4-Digit Code:</label>
-    <input type="text" id="access-code" maxlength="4">
-    <button onclick="checkCode()">Enter</button>
-  </div>
 
   <div id="form-container">
     <div class="form-section">
@@ -82,21 +75,10 @@
   <script>
     let students = ["John Doe", "Jane Smith", "Emily Johnson"]; // Placeholder, to be replaced by Google Sheets API
 
-    function checkCode() {
-  const code = document.getElementById('access-code').value;
-  if (code === '7473') {
-    document.getElementById('form-container').style.display = 'block';
-    loadStudentNames();
-  } else {
-    alert('Invalid code. Access denied.');
-  }
-}$/.test(code)) {
-        document.getElementById('form-container').style.display = 'block';
-        loadStudentNames();
-      } else {
-        alert('Please enter a valid 4-digit code.');
-      }
-    }
+    window.onload = function() {
+      document.getElementById('form-container').style.display = 'block';
+      loadStudentNames();
+    };
 
     function loadStudentNames() {
       const studentSelect = document.getElementById('student-name');
@@ -125,7 +107,7 @@
       row.insertCell(4).innerText = teacher;
 
       // Create PDF
-      const {{ jsPDF }} = window.jspdf;
+      const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       doc.setFontSize(24);
       doc.text("PASS", 20, 30);
