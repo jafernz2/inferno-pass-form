@@ -1,0 +1,25 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1, h2 {
+  color: #b22222;
+}
+
+section {
+  margin-bottom: 30px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+label, input, select, button {
+  display: block;
+  margin: 10px 0;
+}
+
+#pass-display {
+  border: 2px dashed #b22222;
+  padding: 20px;
+  margin-top: 10px;
+}
