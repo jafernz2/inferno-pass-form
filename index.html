@@ -1,121 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Inferno Schools Classroom and Hall System</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://apis.google.com/js/api.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .form-section { margin-bottom: 15px; }
-    table, th, td { border: 1px solid black; border-collapse: collapse; }
-    th, td { padding: 5px; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inferno Schools Pass System</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Inferno Schools Classroom and Hall System</h1>
+  <h1>Inferno Schools Pass System</h1>
 
-  <div id="form-container">
-    <div class="form-section">
-      <label for="student-name">Student Name:</label>
-      <select id="student-name"></select>
-    </div>
+  <section id="student-section">
+    <h2>Add Student</h2>
+    <input type="text" id="student-name" placeholder="Student Name" />
+    <button onclick="addStudent()">Add Student</button>
+    <ul id="student-list"></ul>
+  </section>
 
-    <div class="form-section">
-      <label for="attendance-code">Attendance Code:</label>
-      <select id="attendance-code">
-        <option value="P">P - Present</option>
-        <option value="T">T - Tardy</option>
-        <option value="XT">XT - Excused Tardy</option>
-        <option value="U">U - Unexcused Tardy</option>
-        <option value="A">A - Absent</option>
-        <option value="EA">EA - Excused Absence</option>
-        <option value="OFC">OFC - Office Pass</option>
-        <option value="NUR">NUR - Nurse</option>
-        <option value="ISS">ISS - In-School Suspension</option>
-        <option value="OSS">OSS - Out-of-School Suspension</option>
-        <option value="EXT">EXT - Extra</option>
-        <option value="ADM">ADM - Administrative Hold</option>
-        <option value="HAL">HAL - Hallway Pass</option>
-      </select>
-    </div>
+  <section id="pass-section">
+    <h2>Insert a Pass</h2>
+    <label for="student-select">Student Name:</label>
+    <select id="student-select"></select>
 
-    <div class="form-section">
-      <label for="pass-time">Pass Time:</label>
-      <select id="pass-time">
-        <option value="0">0 min - Mark change</option>
-        <option value="3">3 min</option>
-        <option value="5">5 min</option>
-        <option value="10">10 min</option>
-        <option value="15">15 min</option>
-        <option value="20">20 min</option>
-        <option value="25">25 min</option>
-        <option value="30">30 min</option>
-      </select>
-    </div>
+    <label for="attendance-code">Attendance Code:</label>
+    <select id="attendance-code">
+      <option value="P">P - Present</option>
+      <option value="T">T - Tardy</option>
+      <option value="XT">XT - Excused Tardy</option>
+      <option value="U">U - Unexcused Tardy</option>
+      <option value="A">A - Absent</option>
+      <option value="EA">EA - Excused Absence</option>
+      <option value="OFC">OFC - Office Pass</option>
+      <option value="NUR">NUR - Nurse</option>
+      <option value="ISS">ISS - In-School Suspension</option>
+      <option value="OSS">OSS - Out-of-School Suspension</option>
+      <option value="EXT">EXT - Extra</option>
+      <option value="ADM">ADM - Administrative Hold</option>
+    </select>
 
-    <div class="form-section">
-      <label for="room-number">Room Number:</label>
-      <input type="text" id="room-number">
-    </div>
+    <label for="pass-time">Pass Time:</label>
+    <select id="pass-time">
+      <option value="0">Change mark</option>
+    </select>
 
-    <div class="form-section">
-      <label for="teacher-name">Teacher Last Name:</label>
-      <input type="text" id="teacher-name">
-    </div>
+    <label for="room-number">Room Number:</label>
+    <input type="text" id="room-number" />
 
-    <button onclick="handleSubmit()">Submit</button>
+    <label for="teacher-name">Teacher Last Name:</label>
+    <input type="text" id="teacher-name" />
 
-    <h3>Response Log</h3>
-    <table id="response-log">
-      <tr><th>Student Name</th><th>Pass Time</th><th>Attendance Code</th><th>Room</th><th>Teacher</th></tr>
-    </table>
-  </div>
+    <button onclick="submitPass()">Submit</button>
+  </section>
 
-  <script>
-    let students = ["John Doe", "Jane Smith", "Emily Johnson"]; // Placeholder, to be replaced by Google Sheets API
+  <section id="pass-output">
+    <h2>Generated Pass</h2>
+    <div id="pass-display"></div>
+  </section>
 
-    window.onload = function() {
-      document.getElementById('form-container').style.display = 'block';
-      loadStudentNames();
-    };
-
-    function loadStudentNames() {
-      const studentSelect = document.getElementById('student-name');
-      studentSelect.innerHTML = '';
-      students.forEach(name => {
-        const option = document.createElement('option');
-        option.text = name;
-        studentSelect.add(option);
-      });
-    }
-
-    function handleSubmit() {
-      const name = document.getElementById('student-name').value;
-      const passTime = document.getElementById('pass-time').value;
-      const attendance = document.getElementById('attendance-code').value;
-      const room = document.getElementById('room-number').value;
-      const teacher = document.getElementById('teacher-name').value;
-
-      // Log data
-      const logTable = document.getElementById('response-log');
-      const row = logTable.insertRow();
-      row.insertCell(0).innerText = name;
-      row.insertCell(1).innerText = passTime + ' min';
-      row.insertCell(2).innerText = attendance;
-      row.insertCell(3).innerText = room;
-      row.insertCell(4).innerText = teacher;
-
-      // Create PDF
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.setFontSize(24);
-      doc.text("PASS", 20, 30);
-      doc.setFontSize(16);
-      doc.text(`Student: ${name}`, 20, 50);
-      doc.text(`Time: ${passTime} minutes`, 20, 60);
-      doc.save(`${name}_pass.pdf`);
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
